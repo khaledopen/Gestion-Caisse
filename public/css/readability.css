@@ -1,0 +1,448 @@
+/* Lisibilité et confort d'utilisation */
+body {
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.muted {
+    color: #5f6d64;
+}
+
+h1 {
+    font-size: clamp(34px, 2.5vw, 44px);
+    line-height: 1.15;
+}
+
+h2 {
+    font-size: 21px;
+}
+
+.sidebar {
+    width: 270px;
+    padding: 32px 24px 22px;
+    overflow-y: auto;
+}
+
+.main-shell {
+    margin-left: 270px;
+}
+
+.brand {
+    font-size: 36px;
+}
+
+.workspace {
+    padding: 15px 12px;
+    font-size: 14px;
+}
+
+.workspace small,
+.profile small {
+    font-size: 12px;
+}
+
+.nav-label,
+.eyebrow {
+    font-size: 11px;
+}
+
+nav a,
+.nav-group summary {
+    min-height: 48px;
+    padding: 13px 14px;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.nav-submenu a {
+    min-height: 42px;
+    padding: 11px 12px;
+    font-size: 13px;
+}
+
+.sidebar-note {
+    font-size: 13px;
+}
+
+.sidebar-note p {
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.profile {
+    font-size: 14px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+}
+
+.logout-form {
+    margin-top: 14px;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid #d7dfd8;
+    border-radius: 8px;
+    background: #fff;
+    color: #42564a;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.logout-button:hover {
+    border-color: #b86c5c;
+    background: #fff4f1;
+    color: #934d40;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 23px;
+    margin-bottom: 25px;
+}
+
+.chart-wrap.compact {
+    height: 270px;
+}
+
+.topbar {
+    height: 78px;
+    padding: 0 42px;
+    font-size: 13px;
+}
+
+.dashboard {
+    padding: 38px 42px 28px;
+}
+
+.page-heading {
+    margin-bottom: 30px;
+}
+
+.page-heading .eyebrow {
+    font-size: 11px;
+}
+
+.page-heading p:last-child {
+    font-size: 15px;
+}
+
+.btn {
+    min-height: 44px;
+    padding: 11px 18px;
+    font-size: 14px;
+}
+
+.btn-sm {
+    min-height: 38px;
+    padding: 8px 13px;
+    font-size: 13px;
+}
+
+.stat-card {
+    padding: 24px;
+}
+
+.stat-title {
+    font-size: 14px;
+}
+
+.stat-value {
+    font-size: clamp(27px, 2vw, 36px);
+}
+
+.stat-value small {
+    font-size: 12px;
+}
+
+.stat-foot {
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.panel {
+    padding: 26px;
+}
+
+.panel-heading p,
+.overview > p.muted {
+    font-size: 13px;
+}
+
+.period-tag,
+.count-tag,
+.overview-note {
+    font-size: 12px;
+}
+
+.overview h2 {
+    font-size: 27px;
+}
+
+.fund-row {
+    font-size: 14px;
+}
+
+.fund-row strong {
+    font-size: 20px;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) repeat(3, minmax(180px, 220px));
+    align-items: center;
+    gap: 14px 12px;
+}
+
+.filters .form-control,
+.filters .form-select {
+    width: 100%;
+    height: 44px;
+    font-size: 13px;
+}
+
+.filters .search-field {
+    min-width: 0;
+}
+
+.filters > .btn-filter {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: start;
+}
+
+.filters > .reset-link {
+    grid-column: 4;
+    grid-row: 2;
+    justify-self: start;
+}
+
+.filters > .date-filters {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    width: 100%;
+}
+
+.reset-link,
+.date-filters label {
+    font-size: 12px;
+}
+
+.ledger-table th {
+    padding: 14px 12px;
+    font-size: 11px;
+}
+
+.ledger-table td {
+    padding: 17px 12px;
+    font-size: 13px;
+}
+
+.operation-cell strong {
+    font-size: 14px;
+}
+
+.operation-cell small {
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.amount {
+    font-size: 14px;
+}
+
+.amount small,
+.badge-status,
+.cancel-button {
+    font-size: 11px;
+}
+
+.badge-status {
+    display: inline-block;
+    padding: 7px 11px;
+}
+
+.empty-state h3 {
+    font-size: 19px;
+}
+
+.empty-state p,
+.pagination-wrap p,
+.page-link {
+    font-size: 13px;
+}
+
+.form-label {
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-control,
+.form-select {
+    min-height: 46px;
+    font-size: 15px;
+}
+
+.form-select {
+    padding-right: 44px !important;
+    background-position: right 14px center;
+    text-overflow: ellipsis;
+}
+
+input.form-control {
+    text-overflow: ellipsis;
+}
+
+textarea.form-control {
+    min-height: 100px;
+}
+
+.modal-body,
+.modal-header,
+.modal-footer {
+    padding: 24px;
+}
+
+.modal-title {
+    font-size: 21px !important;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+    outline: 3px solid #d1a864;
+    outline-offset: 3px;
+}
+
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 230px;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .main-shell {
+        margin-left: 230px;
+    }
+
+    .dashboard,
+    .topbar {
+        padding-left: 28px;
+        padding-right: 28px;
+    }
+
+    .stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1100px) {
+    .filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filters .search-field,
+    .filters > .date-filters {
+        grid-column: 1 / -1;
+    }
+
+    .filters > .date-filters {
+        grid-row: auto;
+    }
+
+    .filters > .btn-filter,
+    .filters > .reset-link {
+        grid-column: auto;
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 800px) {
+    .sidebar {
+        width: 100%;
+        padding: 18px;
+    }
+
+    .main-shell {
+        margin-left: 0;
+    }
+
+    .sidebar nav {
+        padding-bottom: 5px;
+    }
+
+    .sidebar nav a,
+    .sidebar nav .nav-group summary,
+    .sidebar nav .nav-submenu a {
+        min-height: 44px;
+        padding: 11px 13px;
+        font-size: 13px;
+    }
+
+    .dashboard {
+        padding: 26px 18px;
+    }
+
+    .topbar {
+        padding: 0 18px;
+        font-size: 12px;
+    }
+
+    .page-heading {
+        flex-direction: column;
+    }
+
+    .page-heading .btn {
+        width: 100%;
+    }
+
+    .stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-wrap.compact {
+        height: 320px;
+    }
+
+    .filters .form-control,
+    .filters .form-select,
+    .filters .search-field {
+        width: 100%;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .filters .search-field,
+    .filters > .date-filters,
+    .filters > .btn-filter,
+    .filters > .reset-link {
+        grid-column: 1;
+    }
+
+    .filters > .btn-filter {
+        width: 100%;
+    }
+
+    .date-filters {
+        flex-direction: column;
+    }
+}

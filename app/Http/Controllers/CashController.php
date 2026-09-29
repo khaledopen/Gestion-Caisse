@@ -1,0 +1,82 @@
+<?php
+namespace App\Http\Controllers;
+use App\Models\{CashAccount, Transaction};
+use App\Services\CashLedger;
+use App\Exports\TransactionsExport;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+class CashController
+{
+    private function filtered(Request $request) {
+        $request->validate(['from' => 'nullable|date_format:Y-m-d', 'to' => ['nullable', 'date_format:Y-m-d', ...($request->filled('from') ? ['after_or_equal:from'] : [])], 'type' => ['nullable', Rule::in(array_keys(Transaction::TYPES))], 'flow' => 'nullable|in:entree,sortie', 'q' => 'nullable|string|max:100', 'period' => 'nullable|in:day,week,month', 'status' => 'nullable|in:active,cancelled']);
+        $query = Transaction::query();
+        if ($request->filled('period')) {
+            $start = match ($request->period) { 'day' => today(), 'week' => today()->startOfWeek(), default => today()->startOfMonth() };
+            $query->whereBetween('occurred_on', [$start->toDateString(), today()->toDateString()]);
+        }
+        if ($request->filled('from')) $query->whereDate('occurred_on', '>=', $request->from);
+        if ($request->filled('to')) $query->whereDate('occurred_on', '<=', $request->to);
+        if ($request->flow === 'entree') $query->whereIn('type', ['recette', 'approvisionnement']);
+        if ($request->flow === 'sortie') $query->whereIn('type', ['depense', 'retrait']);
+        if ($request->filled('type')) $query->where('type', $request->type);
+        if ($request->filled('q')) $query->where('description', 'like', '%'.$request->q.'%');
+        if ($request->status === 'active') $query->whereNull('cancelled_at');
+        if ($request->status === 'cancelled') $query->whereNotNull('cancelled_at');
+        return $query;
+    }
+    public function index(Request $request) {
+        $query = $this->filtered($request);
+        $active = (clone $query)->whereNull('cancelled_at');
+        $totals = [];
+        foreach (array_keys(Transaction::TYPES) as $type) $totals[$type] = (int) (clone $active)->where('type', $type)->sum('amount_minor');
+        $allActive = Transaction::query()->whereNull('cancelled_at');
+        $typeChart = collect(Transaction::TYPES)->map(fn ($label, $type) => [
+            'label' => $label,
+            'value' => (int) (clone $allActive)->where('type', $type)->sum('amount_minor') / 100,
+        ])->values();
+        $paymentChart = collect(Transaction::METHODS)->map(fn ($label, $method) => [
+            'label' => $label,
+            'value' => (int) (clone $allActive)->where('payment_method', $method)->sum('amount_minor') / 100,
+        ])->values();
+        $chart = collect(range(6, 0))->map(function ($offset) {
+            $date = today()->subDays($offset);
+            $query = Transaction::whereNull('cancelled_at')->whereDate('occurred_on', $date);
+            return ['label' => $date->format('d/m'), 'in' => (int) (clone $query)->whereIn('type', ['recette', 'approvisionnement'])->sum('amount_minor') / 100, 'out' => (int) (clone $query)->whereIn('type', ['depense', 'retrait'])->sum('amount_minor') / 100];
+        });
+        return view('dashboard', [
+            'balance' => CashAccount::findOrFail(1)->balance_minor,
+            'totals' => $totals, 'chart' => $chart,
+            'typeChart' => $typeChart, 'paymentChart' => $paymentChart,
+            'todayCount' => Transaction::whereNull('cancelled_at')->whereDate('occurred_on', today())->count(),
+            'transactions' => $query->with('user', 'canceller')->orderByDesc('occurred_on')->orderByDesc('id')->paginate(12)->withQueryString(),
+        ]);
+    }
+    public function store(Request $request, CashLedger $ledger) {
+        $data = $request->validate([
+            'request_key' => 'required|uuid', 'type' => ['required', Rule::in(array_keys(Transaction::TYPES))],
+            'amount' => ['required', 'regex:/^\d{1,10}(\.\d{1,2})?$/', 'numeric', 'min:0.01', 'max:9999999999.99'],
+            'payment_method' => ['required', Rule::in(array_keys(Transaction::METHODS))],
+            'description' => 'required|string|max:255', 'justification' => 'nullable|string|max:5000',
+            'occurred_on' => 'required|date_format:Y-m-d|before_or_equal:today',
+        ]);
+        $transaction = $ledger->record($data, $request->user());
+        return redirect()->route('dashboard')->with('success', 'Opération '.$transaction->reference.' enregistrée.');
+    }
+    public function cancel(Request $request, Transaction $transaction, CashLedger $ledger) {
+        $data = $request->validate(['cancellation_reason' => 'required|string|min:5|max:255']);
+        $ledger->cancel($transaction, $data['cancellation_reason'], $request->user());
+        return back()->with('success', 'Opération annulée. Le solde a été recalculé.');
+    }
+    public function receipt(Transaction $transaction) {
+        return Pdf::loadView('receipt', compact('transaction'))->download($transaction->reference.'.pdf');
+    }
+    public function export(Request $request, string $format) {
+        abort_unless(in_array($format, ['pdf', 'xlsx']), 404);
+        $query = $this->filtered($request)->orderBy('occurred_on')->orderBy('id');
+        if ((clone $query)->count() > 5000) return back()->withErrors(['export' => 'Limitez la période à 5 000 opérations maximum.']);
+        $transactions = $query->get();
+        return $format === 'xlsx' ? Excel::download(new TransactionsExport($transactions), 'rapport-caisse.xlsx') : Pdf::loadView('report', compact('transactions'))->setPaper('a4', 'landscape')->download('rapport-caisse.pdf');
+    }
+}

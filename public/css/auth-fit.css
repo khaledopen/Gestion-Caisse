@@ -1,0 +1,73 @@
+@media (min-width: 901px) {
+    .auth-page {
+        height: 100vh;
+        min-height: 0;
+        overflow: hidden;
+        padding: 24px;
+    }
+
+    .auth-card {
+        width: min(960px, 100%);
+        height: min(600px, calc(100vh - 48px));
+        min-height: 0;
+        grid-template-columns: minmax(330px, 42%) minmax(430px, 58%);
+    }
+
+    .auth-visual {
+        padding: 30px 34px 26px;
+    }
+
+    .auth-visual-copy {
+        margin-top: 28px;
+    }
+
+    .auth-visual-copy h2 {
+        font-size: 27px;
+    }
+
+    .cash-illustration {
+        max-height: 215px;
+        margin-bottom: 2px;
+    }
+
+    .auth-panel {
+        padding: 34px 52px;
+    }
+
+    .auth-card-register {
+        height: min(660px, calc(100vh - 32px));
+        min-height: 0;
+    }
+
+    .auth-card-register .auth-panel {
+        padding: 24px 50px;
+    }
+
+    .auth-card-register .auth-form-card h1 {
+        font-size: 33px;
+    }
+
+    .auth-card-register .auth-input .form-control {
+        height: 45px;
+        min-height: 45px;
+    }
+
+    .auth-card-register .auth-form-card .form-label {
+        margin-top: 6px;
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 900px) {
+    .auth-page {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    .auth-card,
+    .auth-card-register {
+        height: auto;
+        min-height: 0;
+    }
+}

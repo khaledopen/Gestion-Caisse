@@ -1,0 +1,15 @@
+/vendor/
+/node_modules/
+/.tools/
+/.env
+/storage/*.key
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/bootstrap/cache/*.php
+/.phpunit.result.cache
+/database/backups/
+/database/*.sqlite
+/database/*.sqlite-journal
