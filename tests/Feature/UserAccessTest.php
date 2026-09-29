@@ -68,6 +68,14 @@ class UserAccessTest extends TestCase
         $this->actingAs($this->user())->get('/administration/utilisateurs')->assertForbidden();
     }
 
+    public function test_registered_user_can_be_promoted_from_console(): void
+    {
+        $user = $this->user(['email' => 'responsable@entreprise.test']);
+        $this->artisan('caisse:admin', ['email' => $user->email])->assertSuccessful();
+        $this->assertTrue($user->fresh()->is_admin);
+        $this->assertTrue($user->fresh()->is_active);
+    }
+
     public function test_blocked_user_cannot_log_in_or_keep_using_application(): void
     {
         $blocked = $this->user(['email' => 'blocked@example.test', 'password' => 'Securite123456', 'is_active' => false]);

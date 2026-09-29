@@ -13,3 +13,5 @@
 /database/backups/
 /database/*.sqlite
 /database/*.sqlite-journal
+/*.sql
+/*.sql.gz
