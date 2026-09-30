@@ -3,7 +3,7 @@
     <div class="auth-visual-copy">
         <div class="wallet-badge" aria-hidden="true">▣</div>
         <h2>Votre caisse,<br>simple et efficace.</h2>
-        <p>Suivez les recettes, les dépenses et chaque mouvement au même endroit.</p>
+        <p>Suivez les approvisionnements, les dépenses et chaque mouvement au même endroit.</p>
     </div>
     <svg class="cash-illustration" viewBox="0 0 420 260" role="img" aria-label="Illustration d’une caisse avec pièces, reçu et calculatrice">
         <defs>

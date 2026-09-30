@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class CashController
 {
     private function filtered(Request $request) {
-        $request->validate(['from' => 'nullable|date_format:Y-m-d', 'to' => ['nullable', 'date_format:Y-m-d', ...($request->filled('from') ? ['after_or_equal:from'] : [])], 'type' => ['nullable', Rule::in(array_keys(Transaction::TYPES))], 'flow' => 'nullable|in:entree,sortie', 'q' => 'nullable|string|max:100', 'period' => 'nullable|in:day,week,month', 'status' => 'nullable|in:active,cancelled']);
+        $request->validate(['from' => 'nullable|date_format:Y-m-d', 'to' => ['nullable', 'date_format:Y-m-d', ...($request->filled('from') ? ['after_or_equal:from'] : [])], 'type' => ['nullable', Rule::in(array_keys(Transaction::OPERATION_TYPES))], 'flow' => 'nullable|in:entree,sortie', 'q' => 'nullable|string|max:100', 'period' => 'nullable|in:day,week,month', 'status' => 'nullable|in:active,cancelled']);
         $query = Transaction::query();
         if ($request->filled('period')) {
             $start = match ($request->period) { 'day' => today(), 'week' => today()->startOfWeek(), default => today()->startOfMonth() };
@@ -32,7 +32,7 @@ class CashController
         $totals = [];
         foreach (array_keys(Transaction::TYPES) as $type) $totals[$type] = (int) (clone $active)->where('type', $type)->sum('amount_minor');
         $allActive = Transaction::query()->whereNull('cancelled_at');
-        $typeChart = collect(Transaction::TYPES)->map(fn ($label, $type) => [
+        $typeChart = collect(Transaction::OPERATION_TYPES)->map(fn ($label, $type) => [
             'label' => $label,
             'value' => (int) (clone $allActive)->where('type', $type)->sum('amount_minor') / 100,
         ])->values();
@@ -55,7 +55,7 @@ class CashController
     }
     public function store(Request $request, CashLedger $ledger) {
         $data = $request->validate([
-            'request_key' => 'required|uuid', 'type' => ['required', Rule::in(array_keys(Transaction::TYPES))],
+            'request_key' => 'required|uuid', 'type' => ['required', Rule::in(array_keys(Transaction::OPERATION_TYPES))],
             'amount' => ['required', 'regex:/^\d{1,10}(\.\d{1,2})?$/', 'numeric', 'min:0.01', 'max:9999999999.99'],
             'payment_method' => ['required', Rule::in(array_keys(Transaction::METHODS))],
             'description' => 'required|string|max:255', 'justification' => 'nullable|string|max:5000',

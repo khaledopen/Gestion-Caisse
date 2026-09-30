@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     public const TYPES = ['recette' => 'Recette', 'depense' => 'Dépense', 'approvisionnement' => 'Approvisionnement', 'retrait' => 'Retrait'];
+    public const OPERATION_TYPES = ['approvisionnement' => 'Approvisionnement', 'depense' => 'Dépense'];
     public const METHODS = ['especes' => 'Espèces', 'mobile_money' => 'Mobile Money', 'virement' => 'Virement'];
     protected $guarded = [];
     protected function casts(): array { return ['amount_minor' => 'integer', 'occurred_on' => 'date', 'cancelled_at' => 'datetime']; }

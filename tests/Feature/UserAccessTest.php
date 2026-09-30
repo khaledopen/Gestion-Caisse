@@ -40,7 +40,7 @@ class UserAccessTest extends TestCase
         $creator = $this->user(['name' => 'Aïcha Koné']);
         $viewer = $this->user(['name' => 'Moussa Traoré']);
         app(CashLedger::class)->record([
-            'request_key' => (string) Str::uuid(), 'type' => 'recette', 'amount' => '25000',
+            'request_key' => (string) Str::uuid(), 'type' => 'approvisionnement', 'amount' => '25000',
             'description' => 'Paiement du client partagé', 'payment_method' => 'especes',
             'occurred_on' => today()->toDateString(),
         ], $creator);

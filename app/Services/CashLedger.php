@@ -7,6 +7,10 @@ class CashLedger
 {
     public function record(array $data, User $user): Transaction
     {
+        if (!array_key_exists($data['type'] ?? '', Transaction::OPERATION_TYPES)) {
+            throw ValidationException::withMessages(['type' => 'Le type d’opération sélectionné n’est pas disponible.']);
+        }
+
         return DB::transaction(function () use ($data, $user) {
             $account = CashAccount::lockForUpdate()->findOrFail(1);
             $existing = Transaction::where('request_key', $data['request_key'])->first();
@@ -14,7 +18,7 @@ class CashLedger
             // Integer arithmetic: no floating-point rounding in the ledger.
             [$whole, $fraction] = array_pad(explode('.', (string) $data['amount'], 2), 2, '');
             $minor = ((int) $whole * 100) + (int) str_pad($fraction, 2, '0');
-            $delta = in_array($data['type'], ['recette', 'approvisionnement'], true) ? $minor : -$minor;
+            $delta = $data['type'] === 'approvisionnement' ? $minor : -$minor;
             if ($account->balance_minor + $delta < 0) throw ValidationException::withMessages(['amount' => 'Le solde disponible est insuffisant.']);
             unset($data['amount']);
             $transaction = Transaction::create([...$data, 'amount_minor' => $minor, 'user_id' => $user->id]);
